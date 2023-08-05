@@ -62,9 +62,9 @@ exports.updateTodolist = (req, res) => {
         const sql = `UPDATE todolist_tb SET task_name = ?, description = ?, is_done = ? WHERE todo_id = ${todolistId} AND is_Active = true`;
         const updateData = fetchDataFromDb(sql, params);
         if (!updateData) {
-            res.status(400).json({ message: "User not updated" });
+            res.status(400).json({ message: "Todo list not updated" });
         } else {
-            res.status(200).json({ message: "User updated" });
+            res.status(200).json({ message: "Todo list updated" });
         }
     } catch (error) {
         console.log(error);
