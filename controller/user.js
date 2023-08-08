@@ -22,7 +22,6 @@ exports.createUser = async (req, res) => {
             res.status(200).json({ message: "User created" });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json('Something went wrong');
     }
 }
@@ -83,7 +82,6 @@ exports.updateUser = (req, res) => {
             res.status(200).json({ message: "User updated" });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json('Something went wrong');
     }
 }
@@ -99,7 +97,6 @@ exports.deleteUser = (req, res) => {
             res.status(200).json({ message: "User deleted" });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json('Something went wrong');
     }
 }

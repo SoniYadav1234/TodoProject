@@ -29,7 +29,6 @@ exports.readTodolist = async (req, res) => {
             res.status(400).json({ message: "Todo list not found." })
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Something went wrong!" })
     }
 }
@@ -39,7 +38,7 @@ exports.readAllTodolist = async (req, res) => {
         const {from,to} = req.query;
         const { offset, pageSize } = paginationFunction.paginationWithFromTo(from,to);
         const userId = req.userData.id;
-        const params = [userId, offset, pageSize];
+        const params = [userId, pageSize,  offset];
         const sql = `SELECT task_name, description, is_done FROM todolist_tb  WHERE is_Active = true AND user_id = ? LIMIT ? OFFSET ?`;
         const result = await fetchDataFromDb(sql, params);
         if (result) {
@@ -48,42 +47,39 @@ exports.readAllTodolist = async (req, res) => {
             res.status(400).json({ message: "Data not found" })
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json({ message: "Something went wrong!" })
     }
 
 }
 
-exports.updateTodolist = (req, res) => {
+exports.updateTodolist = async (req, res) => {
     try {
         const todolistId = req.params.id;
         const { task_name, description, is_done } = req.body;
         const params = [task_name, description, is_done];
-        const sql = `UPDATE todolist_tb SET task_name = ?, description = ?, is_done = ? WHERE todo_id = ${todolistId} AND is_Active = true`;
-        const updateData = fetchDataFromDb(sql, params);
+        const sql = `UPDATE todolist_tb SET task_name = ?, description = ?, is_done = ? WHERE is_Active = true AND todo_id = ${todolistId} `;
+        const updateData = await fetchDataFromDb(sql, params);
         if (!updateData) {
             res.status(400).json({ message: "Todo list not updated" });
         } else {
             res.status(200).json({ message: "Todo list updated" });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json('Something went wrong');
     }
 }
 
-exports.deleteTodolist = (req, res) => {
+exports.deleteTodolist = async (req, res) => {
     try {
         const todolistId = req.params.id;
         const sql = `UPDATE todolist_tb SET is_Active = false WHERE todo_id = ? AND is_Active = true`;
-        const updateData = fetchDataFromDb(sql,todolistId);
+        const updateData = await fetchDataFromDb(sql,todolistId);
         if (!updateData) {
             res.status(400).json({ message: "Todolist not deleted" });
         } else {
             res.status(200).json({ message: "Todolist deleted" });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).json('Something went wrong');
     }
 }
